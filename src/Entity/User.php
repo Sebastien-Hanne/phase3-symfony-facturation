@@ -49,6 +49,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, unique: true, nullable: true)]
     private ?string $siret = null;
 
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $cgv = null;
+
     #[ORM\Column]
     private bool $isVerified = false;
 
@@ -180,10 +183,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->siret;
     }
 
-    public function setSiret(string $siret): static
+    public function setSiret(?string $siret): static
     {
         $this->siret = $siret;
 
+        return $this;
+    }
+
+    public function getCgv(): ?string
+    {
+        return $this->cgv;
+    }
+
+    public function setCgv(?string $cgv): self
+    {
+        $this->cgv = $cgv;
         return $this;
     }
 
