@@ -1,0 +1,57 @@
+{# templates/product/index.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Produits & Services{% endblock %}
+
+{% block body %}
+<div class="container mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-8">
+        <h1 class="text-2xl font-bold text-slate-800">Produits & Services</h1>
+        <a href="{{ path('app_product_new') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-sm transition flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+            </svg>
+            Ajouter un produit
+        </a>
+    </div>
+
+    <div class="bg-white shadow-sm rounded-2xl overflow-hidden border border-slate-200">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="bg-white border-b border-slate-200 text-slate-900 text-sm">
+                    <th class="py-4 px-6 font-semibold">Nom</th>
+                    <th class="py-4 px-6 font-semibold">Description</th>
+                    <th class="py-4 px-6 font-semibold text-right">Prix unitaire</th>
+                    <th class="py-4 px-6 font-semibold text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+                {% for product in products %}
+                    <tr class="hover:bg-slate-50 transition duration-150">
+                        <td class="py-4 px-6 text-slate-700">{{ product.name }}</td>
+                        <td class="py-4 px-6 text-slate-500">{{ product.description|default('—') }}</td>
+                        <td class="py-4 px-6 text-right font-medium text-slate-700">
+                            {# Correction : .value pour l'Enum Unit #}
+                            {{ product.price }} € / {{ product.unit.value }} 
+                        </td>
+                        <td class="py-4 px-6">
+                            <div class="flex justify-end items-center gap-4">
+                                <a href="{{ path('app_product_edit', {'id': product.id}) }}" class="text-blue-500 hover:text-blue-700 transition" title="Modifier">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                    </svg>
+                                </a>
+                                {{ include('product/_delete_form.html.twig') }}
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="4" class="py-12 text-center text-slate-400">Aucun produit trouvé.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
