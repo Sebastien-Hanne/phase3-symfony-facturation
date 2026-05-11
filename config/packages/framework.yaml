@@ -2,9 +2,8 @@
 framework:
     secret: '%env(APP_SECRET)%'
 
-    session:
+    session: 
         cookie_lifetime: 3600
-        gc_maxlifetime: 3600
     #esi: true
     #fragments: true
 
