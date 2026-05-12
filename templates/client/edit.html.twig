@@ -1,0 +1,29 @@
+{# templates/client/edit.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="bg-slate-50 min-h-screen flex items-start justify-center py-16 px-6">
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm w-full max-w-lg">
+
+        {# Header #}
+        <div class="flex justify-between items-start px-6 pt-6 pb-1">
+            <div>
+                <h1 class="text-lg font-bold text-slate-800">Client - {{ client.name }}</h1>
+                <p class="text-sm text-slate-500 mt-0.5">Modifier le client</p>
+            </div>
+            <a href="{{ path('app_client_index') }}"
+               class="text-slate-400 hover:text-slate-600 transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </a>
+        </div>
+
+        {# Form #}
+        <div class="px-6 pb-6 pt-4">
+            {{ include('client/_form.html.twig', {button_label: 'Enregistrer'}) }}
+        </div>
+
+    </div>
+</div>
+{% endblock %}
