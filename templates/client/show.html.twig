@@ -1,0 +1,67 @@
+{# templates/client/show.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="bg-slate-50 min-h-screen py-10 px-6">
+    <div class="max-w-2xl mx-auto">
+
+        <a href="{{ path('app_client_index') }}"
+           class="inline-flex items-center gap-1.5 text-sm text-slate-400 hover:text-blue-600 transition mb-6">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+            Retour à la liste
+        </a>
+
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="px-6 py-5 border-b border-slate-100 flex justify-between items-center">
+                <div>
+                    <h1 class="text-xl font-bold text-slate-800">{{ client.name }}</h1>
+                    {% if client.siret %}
+                        <p class="text-sm text-slate-400 mt-0.5">SIRET : {{ client.siret }}</p>
+                    {% endif %}
+                </div>
+                <a href="{{ path('app_client_edit', {'id': client.id}) }}"
+                   class="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 border border-blue-100 bg-blue-50 px-3 py-1.5 rounded-lg hover:bg-blue-100 transition">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 012.828 2.828L11.828 15.828a4 4 0 01-1.414.914l-3 1 1-3a4 4 0 01.914-1.414z"/>
+                    </svg>
+                    Modifier
+                </a>
+            </div>
+
+            <dl class="divide-y divide-slate-100">
+                <div class="px-6 py-4 flex gap-4">
+                    <dt class="w-32 text-sm font-medium text-slate-500 shrink-0">Email</dt>
+                    <dd class="text-sm text-slate-800">{{ client.email }}</dd>
+                </div>
+                <div class="px-6 py-4 flex gap-4">
+                    <dt class="w-32 text-sm font-medium text-slate-500 shrink-0">Téléphone</dt>
+                    <dd class="text-sm text-slate-800">{{ client.phone }}</dd>
+                </div>
+                <div class="px-6 py-4 flex gap-4">
+                    <dt class="w-32 text-sm font-medium text-slate-500 shrink-0">Adresse</dt>
+                    <dd class="text-sm text-slate-800">{{ client.address }}</dd>
+                </div>
+                {% if client.siret %}
+                <div class="px-6 py-4 flex gap-4">
+                    <dt class="w-32 text-sm font-medium text-slate-500 shrink-0">SIRET</dt>
+                    <dd class="text-sm text-slate-800 font-mono">{{ client.siret }}</dd>
+                </div>
+                {% endif %}
+                {% if client.rib %}
+                <div class="px-6 py-4 flex gap-4">
+                    <dt class="w-32 text-sm font-medium text-slate-500 shrink-0">RIB</dt>
+                    <dd class="text-sm text-slate-800 font-mono">{{ client.rib }}</dd>
+                </div>
+                {% endif %}
+            </dl>
+
+            <div class="px-6 py-4 border-t border-slate-100">
+                {{ include('client/_delete_form.html.twig') }}
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
