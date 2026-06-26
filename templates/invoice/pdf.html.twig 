@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; font-size: 13px; color: #1e293b; padding: 40px; }
+
+        .header { display: flex; justify-content: space-between; margin-bottom: 40px; }
+        .company-name { font-size: 16px; font-weight: bold; }
+        .company-info { color: #64748b; margin-top: 4px; }
+        .facture-title { text-align: right; }
+        .facture-title h1 { font-size: 28px; font-weight: 900; letter-spacing: 4px; color: #1e293b; }
+        .facture-title p { color: #64748b; margin-top: 4px; }
+
+        .client-block { margin-left: auto; width: 260px; background: #f8fafc; border-radius: 8px; padding: 16px; margin-bottom: 36px; }
+        .client-label { font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; color: #94a3b8; margin-bottom: 8px; }
+        .client-name { font-weight: bold; font-size: 14px; margin-bottom: 4px; }
+        .client-info { color: #64748b; font-size: 12px; line-height: 1.6; }
+
+        table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+        thead tr { border-bottom: 2px solid #1e293b; }
+        thead th { padding: 8px 4px; text-align: left; font-weight: 600; font-size: 12px; }
+        thead th:not(:first-child) { text-align: right; }
+        tbody tr { border-bottom: 1px solid #e2e8f0; }
+        tbody td { padding: 12px 4px; }
+        tbody td:not(:first-child) { text-align: right; }
+        .product-name { font-weight: 500; }
+        .product-desc { color: #94a3b8; font-size: 11px; margin-top: 2px; }
+        .total-col { font-weight: bold; }
+
+        .totals { display: flex; justify-content: flex-end; margin-bottom: 32px; }
+        .totals-box { width: 260px; }
+        .totals-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 13px; color: #475569; }
+        .totals-row.main { border-top: 1px solid #1e293b; margin-top: 8px; padding-top: 8px; font-weight: bold; font-size: 15px; color: #1e293b; }
+        .tva-note { text-align: right; font-size: 11px; color: #94a3b8; margin-top: 4px; }
+
+        .payment { border-top: 1px solid #e2e8f0; padding-top: 20px; }
+        .payment-title { font-weight: 600; margin-bottom: 8px; }
+        .payment-box { background: #f8fafc; border-radius: 6px; padding: 12px; }
+        .rib { font-family: monospace; color: #475569; margin-top: 4px; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div>
+            <p class="company-name">{{ invoice.user ? (invoice.user.name ?? invoice.user.email) : '' }}</p>
+            <p class="company-info">{{ invoice.user ? invoice.user.email : '' }}</p>
+        </div>
+        <div class="facture-title">
+            <h1>FACTURE</h1>
+            <p>N° {{ invoice.number }}</p>
+            <p>Date : {{ invoice.creatAt ? invoice.creatAt|date('d/m/Y') : '—' }}</p>
+        </div>
+    </div>
+
+    {% if invoice.client %}
+    <div style="display:flex; justify-content:flex-end; margin-bottom:36px;">
+        <div class="client-block">
+            <p class="client-label">Facturé à</p>
+            <p class="client-name">{{ invoice.client.name }}</p>
+            <div class="client-info">
+                {% if invoice.client.address %}<p>{{ invoice.client.address }}</p>{% endif %}
+                {% if invoice.client.email %}<p>{{ invoice.client.email }}</p>{% endif %}
+                {% if invoice.client.siret %}<p>SIRET : {{ invoice.client.siret }}</p>{% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <table>
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Qté</th>
+                <th>Prix Unitaire</th>
+                <th>Total TTC</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in invoice.invoiceItems %}
+            <tr>
+                <td>
+                    <p class="product-name">{{ item.product ? item.product.name : '—' }}</p>
+                    {% if item.product and item.product.description %}
+                        <p class="product-desc">{{ item.product.description }}</p>
+                    {% endif %}
+                </td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.unitPrice|number_format(2, ',', ' ') }} €</td>
+                <td class="total-col">{{ item.total|number_format(2, ',', ' ') }} €</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="4" style="text-align:center; color:#94a3b8; font-style:italic; padding:20px;">
+                    Aucune ligne de facture.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="totals">
+        <div class="totals-box">
+            <div class="totals-row">
+                <span>Total HT</span>
+                <span>{{ invoice.totalTtc|number_format(2, ',', ' ') }} €</span>
+            </div>
+            <div class="totals-row main">
+                <span>Total TTC</span>
+                <span>{{ invoice.totalTtc|number_format(2, ',', ' ') }} €</span>
+            </div>
+            <p class="tva-note">TVA non applicable, art. 293 B du CGI</p>
+        </div>
+    </div>
+
+    {% if invoice.client and invoice.client.rib %}
+    <div class="payment">
+        <p class="payment-title">Conditions de paiement</p>
+        <div class="payment-box">
+            <p style="color:#475569;">Coordonnées bancaires pour le paiement :</p>
+            <p class="rib">{{ invoice.client.rib }}</p>
+        </div>
+    </div>
+    {% endif %}
+
+</body>
+</html>

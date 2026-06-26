@@ -69,6 +69,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Client::class, mappedBy: 'user')]
     private Collection $clients;
 
+    #[ORM\ManyToOne(inversedBy: 'User')]
+    private ?Invoice $invoice = null;
+
     public function __construct()
     {
         $this->products = new ArrayCollection();
@@ -289,6 +292,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $client->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getInvoice(): ?Invoice
+    {
+        return $this->invoice;
+    }
+
+    public function setInvoice(?Invoice $invoice): static
+    {
+        $this->invoice = $invoice;
 
         return $this;
     }

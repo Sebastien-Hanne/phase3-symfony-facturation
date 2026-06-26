@@ -1,0 +1,40 @@
+<?php
+
+namespace App\Form;
+
+use App\Entity\Invoice;
+use App\Entity\InvoiceItem;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use App\Entity\Client;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
+class InvoiceType extends AbstractType
+{
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+        $builder
+            ->add('number')
+            ->add('status')
+            ->add('total_ttc')
+            ->add('creat_at', DateType::class, [
+                'widget' => 'single_text',
+                'label' => 'Date de la facture',
+            ])
+            ->add('client', EntityType::class, [
+                'class' => Client::class,
+                'choice_label' => 'name',
+                'label' => 'Client',
+            ])
+        ;
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'data_class' => Invoice::class,
+        ]);
+    }
+}

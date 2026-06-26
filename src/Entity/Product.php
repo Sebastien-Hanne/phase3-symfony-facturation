@@ -30,6 +30,9 @@ class Product
     #[ORM\ManyToOne(inversedBy: 'products')]
     private ?User $user = null;
 
+    #[ORM\ManyToOne(inversedBy: 'product')]
+    private ?InvoiceItem $invoiceItem = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -90,6 +93,18 @@ class Product
     public function setUser(?user $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getInvoiceItem(): ?InvoiceItem
+    {
+        return $this->invoiceItem;
+    }
+
+    public function setInvoiceItem(?InvoiceItem $invoiceItem): static
+    {
+        $this->invoiceItem = $invoiceItem;
 
         return $this;
     }
